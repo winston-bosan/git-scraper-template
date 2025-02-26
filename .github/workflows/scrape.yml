@@ -24,7 +24,7 @@ jobs:
           if [[ "$REPO_DESC" == http://* ]] || [[ "$REPO_DESC" == https://* ]]; then
             echo "./download.sh '$REPO_DESC'" >> scrape.sh
           else
-            echo "# ./download.sh 'https://www.example.com/'"" >> scrape.sh
+            echo "# ./download.sh 'https://www.example.com/'" >> scrape.sh
           fi
           chmod +x scrape.sh
           echo "Created scrape.sh"
