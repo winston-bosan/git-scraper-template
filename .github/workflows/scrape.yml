@@ -22,9 +22,9 @@ jobs:
         if [ ! -f "scrape.sh" ]; then
           echo '#!/bin/bash' > scrape.sh
           if [[ "$REPO_DESC" == http://* ]] || [[ "$REPO_DESC" == https://* ]]; then
-            echo "wget $REPO_DESC" >> scrape.sh
+            echo "./download.sh $REPO_DESC" >> scrape.sh
           else
-            echo '# wget https://www.example.com/' >> scrape.sh
+            echo '# ./download.sh https://www.example.com/' >> scrape.sh
           fi
           chmod +x scrape.sh
           echo "Created scrape.sh"
