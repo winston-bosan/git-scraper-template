@@ -2,14 +2,14 @@
 #
 # recursive_download - Recursively download content from a website with specified depth
 # Usage: ./recursive_download.sh URL ">RECURSIVE=N<"
-# Note: N must be between 1 and 3
+# Note: N must be between 1 and 5
 
 set -e
 
 # Check if at least URL is provided
 if [ $# -lt 1 ]; then
   echo "Usage: $0 URL [RECURSIVE_PARAM]"
-  echo "Example: $0 https://www.example.com \">RECURSIVE=3<\""
+  echo "Example: $0 https://www.example.com \">RECURSIVE=5<\""
   exit 1
 fi
 
@@ -26,7 +26,7 @@ fi
 if [ $# -gt 1 ]; then
   PARAM="$2"
   # Extract recursive depth from parameter
-  if [[ "$PARAM" =~ \>RECURSIVE=([1-3])\< ]]; then
+  if [[ "$PARAM" =~ \>RECURSIVE=([1-5])\< ]]; then
     RECURSIVE_DEPTH="${BASH_REMATCH[1]}"
     echo "Recursive depth set to: $RECURSIVE_DEPTH"
   else
