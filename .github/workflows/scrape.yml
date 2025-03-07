@@ -22,9 +22,20 @@ jobs:
         if [ ! -f "scrape.sh" ]; then
           echo '#!/bin/bash' > scrape.sh
           if [[ "$REPO_DESC" == http://* ]] || [[ "$REPO_DESC" == https://* ]]; then
-            echo "./download.sh '$REPO_DESC'" >> scrape.sh
+            # Check if recursive parameter is included
+            if [[ "$REPO_DESC" =~ (\$\{\{RECURSIVE=[0-9]+\}\}) ]]; then
+              URL=$(echo "$REPO_DESC" | cut -d' ' -f1)
+              PARAM=$(echo "$REPO_DESC" | grep -o "\${{RECURSIVE=[0-3]\+}}")
+              echo "./recursive_download.sh '$URL' '$PARAM'" >> scrape.sh
+              echo "Created scrape.sh with recursive download"
+            else
+              echo "./download.sh '$REPO_DESC'" >> scrape.sh
+              echo "Created scrape.sh with standard download"
+            fi
           else
             echo "# ./download.sh 'https://www.example.com/'" >> scrape.sh
+            echo "# For recursive crawling:" >> scrape.sh
+            echo "# ./recursive_download.sh 'https://www.example.com/' '\${{RECURSIVE=3}}'" >> scrape.sh
           fi
           chmod +x scrape.sh
           echo "Created scrape.sh"

@@ -2,6 +2,7 @@
 #
 # download - Simple downloader that always constructs the filename from the URL
 # Usage: ./download.sh URL
+# Note: For recursive downloading, use recursive_download.sh instead
 
 set -e
 
