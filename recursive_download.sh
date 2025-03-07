@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 #
 # recursive_download - Recursively download content from a website with specified depth
-# Usage: ./recursive_download.sh URL "${{RECURSIVE=N}}"
+# Usage: ./recursive_download.sh URL ">RECURSIVE=N<"
+# Note: N must be between 1 and 3
 
 set -e
 
 # Check if at least URL is provided
 if [ $# -lt 1 ]; then
   echo "Usage: $0 URL [RECURSIVE_PARAM]"
-  echo "Example: $0 https://www.example.com \"\${{RECURSIVE=3}}\""
+  echo "Example: $0 https://www.example.com \">RECURSIVE=3<\""
   exit 1
 fi
 
@@ -25,12 +26,18 @@ fi
 if [ $# -gt 1 ]; then
   PARAM="$2"
   # Extract recursive depth from parameter
-  if [[ "$PARAM" =~ \$\{\{RECURSIVE=([0-9]+)\}\} ]]; then
+  if [[ "$PARAM" =~ \>RECURSIVE=([1-3])\< ]]; then
     RECURSIVE_DEPTH="${BASH_REMATCH[1]}"
     echo "Recursive depth set to: $RECURSIVE_DEPTH"
   else
     echo "Invalid recursive parameter format. Using default depth of 0."
   fi
+fi
+
+# Ensure depth is not greater than 3
+if [ "$RECURSIVE_DEPTH" -gt 3 ]; then
+  echo "Limiting recursive depth to maximum of 3."
+  RECURSIVE_DEPTH=3
 fi
 
 # Extract domain from URL
@@ -60,7 +67,6 @@ echo "Starting recursive download with depth $RECURSIVE_DEPTH..."
 # Using a simpler approach with a reject list instead of an accept list
 wget \
   -e robots=off \
-  --quota 100M \
   --recursive \
   --level="$RECURSIVE_DEPTH" \
   --wait=1 \
@@ -85,7 +91,6 @@ if [ "$FILE_COUNT" -lt 2 ]; then
   
   wget \
     -e robots=off \
-    --quota 100M \
     --recursive \
     --level="$RECURSIVE_DEPTH" \
     --wait=1 \
